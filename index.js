@@ -1,6 +1,7 @@
 const fs = require("fs");
 const Discord = require("discord.js");
-const config = require("./config.json");
+const { token, prefix } = require("./config.js");
+const helper = require('../helper.js');
 
 const bot = new Discord.Client();
 bot.commands = new Discord.Collection();
@@ -17,30 +18,47 @@ bot.once("ready", () => {
 });
 
 bot.on("message", message => {
-    if (!(message.content.startsWith(config.prefix[0]) || message.content.startsWith(config.prefix[1])) || message.author.bot) {
+    if (!(message.content.startsWith(prefix)) || message.author.bot) {
         return;
     }
     else {
-        let prefix;
-        if (message.content.startsWith(config.prefix[0])) {
-            prefix = config.prefix[0];
-        }
-        else {
-            prefix = config.prefix[1];
-        }
         const args = message.content.slice(prefix.length).split(" ");
         const commandName = args.shift().toLowerCase();
         const command = bot.commands.get(commandName);
 
+        // Check if a command i
         if (!command) {
-            console.log("Command does not exist");
+            console.log("Command does not exist in commands folder");
             return;
         }
+        /*
+        else if (commandName is in database) {
+            // Search database for custom commands
+            // If command is not in there then console.log("Command not in database")
+            // Attempting to execute ${command.name} command
+            if (helper.isURL(text) && helper.isURLImage(text)) {
+                message.channel.send({files: [text]});
+            }
+            else {
+                message.channel.send(text);
+            }
+        }
+        */
+
         else {
             console.log(`Attempting to execute ${command.name} command`);
             command.execute(message, args);
         }
     }
-})
+});
 
-bot.login(config.token);
+bot.on("guildMemberAdd", member => {
+
+    console.log(`${member.user.username} has joined the server.`);
+
+    let role = member.guild.roles.find('name', 'Integrity Abiding Citizens');
+
+    member.addRole(role);
+});
+
+bot.login(token);

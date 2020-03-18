@@ -7,7 +7,7 @@ var functions = {
      * Adapted by https://stackoverflow.com/questions/5717093/check-if-a-javascript-string-is-a-url/49849482
      * from Devshed.
      * 
-     * @param {String} text The string to be checked
+     * @param {String} str The string to be checked
      * 
      * @return {boolean} Whether or not the string is a valid URL
      */

@@ -2,7 +2,7 @@ module.exports = {
     name: "help",
     description: "List of commands or details about a command",
     usage: "-g help OR -g help [command]",
-    execute(message, args) {
+    execute(bot, message, args, db) {
         const data = [];
         const { commands } = message.client;
         

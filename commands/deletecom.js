@@ -3,19 +3,25 @@ module.exports = {
     description: "Delete a custom command",
     usage: "-g deletecom [command]",
     execute(bot, message, args, db) {
-        console.log(args);
+
         const com_name = args.join(" ");
 
         db.query(`SELECT * FROM custom_commands WHERE com_name = '${com_name}'`, (err, rows) => {
                 
+            const isOfficialCommand = bot.commands.get(com_name);
+
             // If there is an error
             if (err) {
                 throw err;
             }
             
-            // If given command name is already in database or in commands folder
+            else if (isOfficialCommand) {
+                message.channel.send("Command cannot be deleted.");
+            }
+
+            // If given command name isn't in database
             else if (!rows[0]) {
-                message.channel.send("Command doesn't exist.");
+                message.channel.send("Command does not exist.");
             }
 
             // If given command name is unique

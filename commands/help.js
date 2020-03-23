@@ -1,3 +1,5 @@
+const Discord = require("discord.js");
+
 module.exports = {
     name: "help",
     description: "List of commands or details about a command",
@@ -8,10 +10,14 @@ module.exports = {
         
         // See list of commands
         if (!args.length) {
-            data.push("List of commands:");
             data.push(commands.map(command => "-g " + command.name).join('\n'));
             data.push("Use '-g help [command]' to get info on a specific command.");
-            message.channel.send(data);
+            
+            const embed = new Discord.RichEmbed()
+                .setColor("#00CC00")
+                .setTitle("List of commands")
+                .setDescription(data);
+            message.channel.send(embed);
         }
 
         // See details of a specific command
@@ -23,14 +29,18 @@ module.exports = {
                 return message.reply("Invalid command");
             }
             else {
-                data.push(`Name: ${command.name}`);
                 if (command.aliases)
                     data.push(`Aliases: ${command.aliases}`);
                 if (command.description)
                     data.push(`Description: ${command.description}`);
                 if (command.usage)
                     data.push(`Usage: ${command.usage}`);
-                message.channel.send(data);
+
+                const embed = new Discord.RichEmbed()
+                    .setColor("#00CC00")
+                    .setTitle(`Name: ${command.name}`)
+                    .setDescription(data);
+                message.channel.send(embed);
             }
         }
     }

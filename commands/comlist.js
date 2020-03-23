@@ -1,3 +1,5 @@
+const Discord = require("discord.js");
+
 module.exports = {
     name: "comlist",
     description: "View list of custom commands.",
@@ -13,13 +15,17 @@ module.exports = {
             else {
                 const data = []
 
-                data.push("List of custom commands:")
                 for (let i = 0; i < rows.length; i++) {
                     data.push("-g " + rows[i].com_name);
                 }
 
-                message.channel.send(data);
+                const embed = new Discord.RichEmbed()
+                    .setColor("#00CC00")
+                    .setTitle("Custom Commands")
+                    .setDescription(data);
+                message.channel.send(embed);
             }
+            
         });
         
     }

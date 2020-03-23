@@ -28,6 +28,7 @@ db.connect(err => {
 
 bot.once("ready", () => {
     console.log(`${bot.user.tag} is now active in ${bot.guilds.size} server(s).`);
+    bot.user.setActivity("-g help");
 });
 
 bot.on("message", message => {

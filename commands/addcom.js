@@ -4,7 +4,7 @@ module.exports = {
     usage: "-g addcom [command name] | [command output]",
     execute(bot, message, args, db) {
         const divIndex = args.indexOf('|');
-        const com_name = args.slice(0, divIndex).join(" ");
+        const com_name = args.slice(0, divIndex).join(" ").toLowerCase();
         const com_content = args.slice(divIndex + 1, args.length).join(" ");
 
         // If user inputted command correctly 

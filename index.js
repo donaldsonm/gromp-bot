@@ -1,6 +1,6 @@
 const fs = require("fs");
 const Discord = require("discord.js");
-const { token, prefix, dbName, dbUser, dbPass } = require("./config.js");
+const { token, prefix, dbName, dbUser, dbPass, riotAPI } = require("./config.js");
 const helper = require('./helper.js');
 const mysql = require("mysql");
 
@@ -14,6 +14,7 @@ for (const file of commandFiles) {
     bot.commands.set(command.name, command);
 }
 
+// Connect to the database
 let db = mysql.createConnection({
     host: "localhost",
     user: dbUser,
@@ -44,7 +45,7 @@ bot.on("message", message => {
         const command = bot.commands.get(commandName);
 
         if (command) {
-            console.log(`Attempting to execute "${command.name}" command from commands folder.`);
+            console.log(`Executing "${command.name}" command from commands folder.`);
             command.execute(bot, message, arrayArgs, db);
         }
 

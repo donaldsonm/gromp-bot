@@ -15,6 +15,7 @@ module.exports = {
                 throw err;
             }
             
+            // If deleting an official command
             else if (isOfficialCommand) {
                 message.channel.send("Command cannot be deleted.");
             }

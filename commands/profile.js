@@ -38,6 +38,7 @@ module.exports = {
                 let flexWins;
                 let flexLosses;
 
+                // Populate ranked stats variables if they exist
                 for (let i = 0; i < rankArray.length; i++) {
                     if (rankArray[i]["queueType"] == "RANKED_SOLO_5x5") {
                         soloRank = rankArray[i]["tier"];
@@ -61,6 +62,7 @@ module.exports = {
 
                 // Build complete message that will be displayed for rank
                 let rankMessage = `Solo Queue: ${soloRank}\n`;
+                
                 if (soloRank != "Unranked") {
                     
                     const winrate = Math.round(100 * 
@@ -81,8 +83,23 @@ module.exports = {
                         Winrate: ${winrate}%\n`;
                 }
 
-                const champ = await kayn.DDragon.Champion.get("Kled");
-                console.log(champ);
+                const mastery = await kayn.ChampionMastery.list(id);
+                let topChamps = "";
+
+                for (let i = 0; i < 5; i++) {
+
+                    const championId = mastery[i]["championId"];
+                    const championLevel = mastery[i]["championLevel"];
+                    const championPoints = mastery[i]["championPoints"];
+
+                    const champList = await 
+                        kayn.DDragon.Champion.listDataByIdWithParentAsId();
+                    const championName = 
+                        champList["data"][championId]["name"];
+
+                    topChamps += `(${championLevel}) ${championName} - \
+                        ${championPoints} pts\n`;
+                }
 
                 // Links for the end of profile
                 const opgg = 
@@ -100,7 +117,9 @@ module.exports = {
 
                 embed.addField("Ranks", rankMessage, true);
 
-                embed.addField("Recent Games", "Placeholder", true);
+                embed.addField("Champion Mastery", topChamps, true);
+
+                embed.addField("Recently Played", "Placeholder", true);
 
                 embed.addField("Links", `[OP.GG](${opgg}) | \
                     [Porofessor.GG](${porofessorgg})`);

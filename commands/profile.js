@@ -17,12 +17,12 @@ module.exports = {
             try {
 
                 // Grab basic profile info 
-                const { id, accountId, name, profileIconId, summonerLevel } = await 
-                    kayn.Summoner.by.name(summonerName).region(region);
+                const { id, accountId, name, profileIconId, summonerLevel } = 
+                    await kayn.Summoner.by.name(summonerName).region(region);
                 
                 // Get current patch number
                 const { v: patch } = await kayn.DDragon.Realm.list(region);
-                
+
                 // Get their profile image
                 const profileImage = 
                     `https://cdn.communitydragon.org/${patch}/profile-icon/${profileIconId}.jpg`
@@ -86,6 +86,7 @@ module.exports = {
                 const mastery = await kayn.ChampionMastery.list(id);
                 let topChamps = "";
 
+                // Grab 5 champions with highest mastery points
                 for (let i = 0; i < 5; i++) {
 
                     const championId = mastery[i]["championId"];
@@ -99,6 +100,65 @@ module.exports = {
 
                     topChamps += `(${championLevel}) ${championName} - \
                         ${championPoints} pts\n`;
+                }
+
+                const matchList = 
+                    (await kayn.Matchlist.by.accountID(accountId))["matches"];
+                const matchMap = new Map();
+                
+                for (let i = 0; i < matchList.length; i++) {
+                    if (matchMap.has(matchList[i]["champion"])) {
+                        const count = matchMap.get(matchList[i]["champion"]);
+                        matchMap.set(matchList[i]["champion"], count + 1);
+                    }
+                    else {
+                        matchMap.set(matchList[i]["champion"], 1);
+                    }
+                }
+
+                let mostPlayed = [
+                    {k: 0, v: 0},
+                    {k: 0, v: 0},
+                    {k: 0, v: 0},
+                    {k: 0, v: 0},
+                    {k: 0, v: 0}
+                ]
+
+                matchMap.forEach( (value, key) => {
+                    if (value > mostPlayed[0].v) {
+                        mostPlayed[0].k = key;
+                        mostPlayed[0].v = value;
+                    }
+                    else if (value > mostPlayed[1].v) {
+                        mostPlayed[1].k = key;
+                        mostPlayed[1].v = value;
+                    }
+                    else if (value > mostPlayed[2].v) {
+                        mostPlayed[2].k = key;
+                        mostPlayed[2].v = value;
+                    }
+                    else if (value > mostPlayed[3].v) {
+                        mostPlayed[3].k = key;
+                        mostPlayed[3].v = value;
+                    }
+                    else if (value > mostPlayed[4].v) {
+                        mostPlayed[4].k = key;
+                        mostPlayed[4].v = value;
+                    }
+                });
+
+                let recentlyPlayed = "";
+
+                for (let i = 0; i < mostPlayed.length; i++) {
+                    const championId = mostPlayed[i].k;
+
+                    const champList = await 
+                        kayn.DDragon.Champion.listDataByIdWithParentAsId();
+                    const championName = 
+                        champList["data"][championId]["name"];
+
+                    recentlyPlayed += `${championName} - ${mostPlayed[i].v} \
+                        games\n`
                 }
 
                 // Links for the end of profile
@@ -119,7 +179,7 @@ module.exports = {
 
                 embed.addField("Champion Mastery", topChamps, true);
 
-                embed.addField("Recently Played", "Placeholder", true);
+                embed.addField("Recently Played", recentlyPlayed, true);
 
                 embed.addField("Links", `[OP.GG](${opgg}) | \
                     [Porofessor.GG](${porofessorgg})`);

@@ -28,7 +28,7 @@ module.exports = {
                     `https://cdn.communitydragon.org/${patch}/profile-icon/${profileIconId}.jpg`
                 
                 // Grabs ranked stats from solo and flex queue
-                const rankArray = await kayn.League.Entries.by.summonerID(id);
+                const rankArray = await kayn.League.Entries.by.summonerID(id).region(region);
                 let soloRank = "Unranked";
                 let flexRank = "Unranked";
                 let soloLP;
@@ -83,7 +83,7 @@ module.exports = {
                         Winrate: ${winrate}%\n`;
                 }
 
-                const mastery = await kayn.ChampionMastery.list(id);
+                const mastery = await kayn.ChampionMastery.list(id).region(region);
                 let topChamps = "";
 
                 // Grab 5 champions with highest mastery points
@@ -103,7 +103,7 @@ module.exports = {
                 }
 
                 const matchList = 
-                    (await kayn.Matchlist.by.accountID(accountId))["matches"];
+                    (await kayn.Matchlist.by.accountID(accountId).region(region))["matches"];
                 const matchMap = new Map();
                 
                 for (let i = 0; i < matchList.length; i++) {

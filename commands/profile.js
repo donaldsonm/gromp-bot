@@ -103,9 +103,11 @@ module.exports = {
                 }
 
                 const matchList = 
-                    (await kayn.Matchlist.by.accountID(accountId).region(region))["matches"];
+                    (await kayn.Matchlist.by.accountID(accountId).region(region).query({beginIndex: 0}))["matches"];
                 const matchMap = new Map();
-                
+            
+                console.log(matchList);
+
                 for (let i = 0; i < matchList.length; i++) {
                     if (matchMap.has(matchList[i]["champion"])) {
                         const count = matchMap.get(matchList[i]["champion"]);
@@ -126,18 +128,38 @@ module.exports = {
 
                 matchMap.forEach( (value, key) => {
                     if (value > mostPlayed[0].v) {
+                        mostPlayed[4].k = mostPlayed[3].k;
+                        mostPlayed[4].v = mostPlayed[3].v;
+                        mostPlayed[3].k = mostPlayed[2].k;
+                        mostPlayed[3].v = mostPlayed[2].v;
+                        mostPlayed[2].k = mostPlayed[1].k;
+                        mostPlayed[2].v = mostPlayed[1].v;
+                        mostPlayed[1].k = mostPlayed[0].k;
+                        mostPlayed[1].v = mostPlayed[0].v;
                         mostPlayed[0].k = key;
                         mostPlayed[0].v = value;
                     }
                     else if (value > mostPlayed[1].v) {
+                        mostPlayed[4].k = mostPlayed[3].k;
+                        mostPlayed[4].v = mostPlayed[3].v;
+                        mostPlayed[3].k = mostPlayed[2].k;
+                        mostPlayed[3].v = mostPlayed[2].v;
+                        mostPlayed[2].k = mostPlayed[1].k;
+                        mostPlayed[2].v = mostPlayed[1].v;
                         mostPlayed[1].k = key;
                         mostPlayed[1].v = value;
                     }
                     else if (value > mostPlayed[2].v) {
+                        mostPlayed[4].k = mostPlayed[3].k;
+                        mostPlayed[4].v = mostPlayed[3].v;
+                        mostPlayed[3].k = mostPlayed[2].k;
+                        mostPlayed[3].v = mostPlayed[2].v;
                         mostPlayed[2].k = key;
                         mostPlayed[2].v = value;
                     }
                     else if (value > mostPlayed[3].v) {
+                        mostPlayed[4].k = mostPlayed[3].k
+                        mostPlayed[4].v = mostPlayed[3].v
                         mostPlayed[3].k = key;
                         mostPlayed[3].v = value;
                     }
